@@ -1,0 +1,65 @@
+ABSA-Assignment
+===============
+
+I have implemented this feature in two ways.
+
+Prep-Work
+=========
+	1.Created Database called PhoneBook
+	2.Created Table PhoneBook(Kindly Refer the PhoneBookEntry.sql)
+	3.User able to Save data with basic validation(http://localhost:50567/PhoneBookEntries/Create)
+	4.User can view Saved Data(http://localhost:50567/)
+	5.User can search specific record by using following API(http://localhost:50567/phonebookentries/searchphoneentry?ka)
+
+Approach
+=========
+Implemented through Reference Architecture using following features
+1.Created PhoneBookWebApi by implementing following design patterns
+	1.Adapter Design Pattern
+		Used EF for OR map. 
+			PhoneBookEntry.Sql contains Table PhoneBookEntry to store PhoneBookEntry
+			PhoneBookTestData.Sql mainly used in Test projects to clear data on eachtime to run test cases successfully.
+
+	2.Placed All business logic in Orchestration Level
+		Contains EnlistProfile 	- To Add and Update records
+			 GetProfile	- Get specific Profile
+			 GetAllProfile 	- GetAllProfile
+	3.Exposing Contracts to outside world.
+		The contracts can be used any other profile insertion like Phone directory
+
+	The idea behind this approach we can use this module separate Web API.
+
+2. Above created PhoneBookWebApi consumed in PhoneBook MVC controller.
+	Created V0 Controller for stubbing
+		context.MapRoute(
+                "V0_default",
+                "V0/{controller}/{action}/{id}",
+                new { action = "Index", id = UrlParameter.Optional });
+
+	GET api/v0/profiles/{Id}
+	POST api/v0/profiles/{Id}
+	PUT api/v0/profiles/{Id}
+
+	Created V1 Controller for real PhoneBook application
+
+     context.MapRoute(
+                "V1_default",
+                "V1/{controller}/{action}/{id}",
+                new { action = "Index", id = UrlParameter.Optional });
+
+	GET api/v1/profiles/{Id}
+	POST api/v1/profiles/{Id}
+	PUT api/v1/profiles/{Id}
+
+TDD
+===
+1.To implement TDD referred following assemblies
+	a.  using Rhino.Mocks;
+	b.  using Microsoft.VisualStudio.TestTools.UnitTesting;
+2. ObjectMother.cs file used to stub data to achieve enlist upsert and get profile
+3.Created separate test projects 
+4.Created separate database for testing
+5.Created V0 for stubs
+6.Update following code in Routeconfig to test Stub items
+
+
